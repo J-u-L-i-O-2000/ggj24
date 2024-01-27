@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f77eceedcb49ec342a09d25d5587cdd7, type: 3}
+  m_Name: Torres
+  m_EditorClassIdentifier: 
+  spawnLeft: 1
+  walkSpeed: 4
+  floatSpeed: 90
+  maxHealth: 100
+  damageTaken: 5
+  infected: {fileID: 7482667652216324306, guid: b384f48392f073d4cade204294a2e702, type: 3}
+  cured: {fileID: -2135585597343286014, guid: fab42f0ee5fa67c45b3f6213bb572f97, type: 3}

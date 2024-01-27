@@ -4,12 +4,11 @@ using UnityEngine;
 
 public class EnemyAI : MonoBehaviour
 {
-    private Renderer enemyRenderer;
+    [SerializeField] private PeasantScriptableObject peasant;
+    private SpriteRenderer enemySprite;
+    private SpriteRenderer enemyRenderer;
     private Rigidbody2D rb;
-    [SerializeField] private bool spawnLeft;
-    [SerializeField] private float walkSpeed;
-    [SerializeField] private float floatSpeed;
-    [SerializeField] private float health;
+    private float health;
     [SerializeField] private bool reachedCastle = false;
     [SerializeField] private bool isClicked = false;
     private int direction;
@@ -20,8 +19,11 @@ public class EnemyAI : MonoBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
-        enemyRenderer = GetComponent<Renderer>();
-        if (spawnLeft)
+        enemySprite = GetComponent<SpriteRenderer>();
+        enemyRenderer = GetComponent<SpriteRenderer>();
+        enemySprite.sprite = peasant.infected;
+        health = peasant.maxHealth;
+        if (peasant.spawnLeft)
         {
             direction = 1;
         }
@@ -36,14 +38,30 @@ public class EnemyAI : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        transform.position += direction*Vector3.right * Time.deltaTime * walkSpeed;
+        Debug.Log(health);
+        transform.position += direction*Vector3.right * Time.deltaTime * peasant.walkSpeed;
 
 
+        if (Input.GetMouseButtonDown(0))
+        {
+            isClicked = true;
+            health -= peasant.damageTaken;
+        }
+        else
+        {
+            isClicked = false;
+        }
+
+        if(health <= 0f)
+        {
+            enemySprite.sprite = peasant.cured;
+        }
 
         if (isClicked)
         {
             rb.gravityScale = 0f;
-            transform.position += Vector3.up * Time.deltaTime * floatSpeed;
+            rb.AddForce(Vector2.up * peasant.floatSpeed);
+            //transform.position += Vector3.up * Time.deltaTime * floatSpeed;
         }
         else
         {
