@@ -1,3 +1,4 @@
+using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -9,39 +10,41 @@ public class EnemyAI : MonoBehaviour
     private SpriteRenderer enemyRenderer;
     private Rigidbody2D rb;
     private float health;
+    private float halfHealth;
     [SerializeField] private bool reachedCastle = false;
     [SerializeField] private bool isClicked = false;
     private int direction;
+    private float groundPosition;
+    [SerializeField] Transform xAxis;
+    [SerializeField] Transform yAxis;
 
 
 
     // Start is called before the first frame update
     void Start()
     {
-        rb = GetComponent<Rigidbody2D>();
+        //rb = GetComponent<Rigidbody2D>();
         enemySprite = GetComponent<SpriteRenderer>();
         enemyRenderer = GetComponent<SpriteRenderer>();
         enemySprite.sprite = peasant.infected;
         health = peasant.maxHealth;
-        if (peasant.spawnLeft)
-        {
-            direction = 1;
-        }
-        else
-        {
-            direction = -1;
-        }
+        halfHealth = health/2f;
+        //if (peasant.spawnLeft)
+        //{
+        //    direction = 1;
+        //}
+        //else
+        //{
+        //    direction = -1;
+        //}
+        groundPosition = transform.position.y;
+        transform.DOMoveX(-transform.position.x, peasant.walkSpeed).SetEase(Ease.OutExpo);
 
-        
     }
 
     // Update is called once per frame
     void Update()
     {
-        Debug.Log(health);
-        transform.position += direction*Vector3.right * Time.deltaTime * peasant.walkSpeed;
-
-
         if (Input.GetMouseButtonDown(0))
         {
             isClicked = true;
@@ -52,6 +55,10 @@ public class EnemyAI : MonoBehaviour
             isClicked = false;
         }
 
+        if(health <= halfHealth)
+        {
+            enemySprite.sprite = peasant.halfCured;
+        }
         if(health <= 0f)
         {
             enemySprite.sprite = peasant.cured;
@@ -59,16 +66,20 @@ public class EnemyAI : MonoBehaviour
 
         if (isClicked)
         {
-            rb.gravityScale = 0f;
-            rb.AddForce(Vector2.up * peasant.floatSpeed);
+            //rb.gravityScale = 0f;
+
+            transform.DOBlendableLocalMoveBy(new Vector3(0f, peasant.jumpForce, 0f), peasant.jumpDuration);
+            //yAxis.DOJump(new Vector3(transform.position.x, groundPosition, transform.position.z), peasant.jumpForce, 1, peasant.jumpDuration);
+            
+            //rb.AddForce(Vector2.up * peasant.floatSpeed);
             //transform.position += Vector3.up * Time.deltaTime * floatSpeed;
         }
-        else
-        {
-            rb.gravityScale = 1f;
-        }
+            //else
+            //{
+            //    rb.gravityScale = 1f;
+            //}
 
-        if(isClicked && !enemyRenderer.isVisible)
+        if (isClicked && !enemyRenderer.isVisible)
         {
             Debug.Log("Im dead bro");
         }
